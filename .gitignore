@@ -11,3 +11,13 @@ wp-content/cache/
 wp-content/upgrade/
 wp-content/uploads/
 wp-content/wp-cache-config.php
+
+dist
+bower_components
+node_modules
+npm-debug.log
+
+
+
+.DS_Store
+.editorconfig

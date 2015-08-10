@@ -1,0 +1,63 @@
+header.banner {
+  background-image: url($image-path + "bg.png");
+  width:100%;
+  nav {
+    margin: 30px 0;
+    overflow: hidden;
+
+    .right {
+      height: 137px;
+      @media screen and (max-width: 767px)  {
+        height: auto;
+      }
+
+    }
+    .right-wrap {
+      @media screen and (max-width: 500px) {
+        position: relative;
+      }
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      a {
+        display:block;
+
+      }
+      .cookie {
+        height: 12px;
+        width: 90px;
+        @include bg-image("Cookiepolitik1.png");
+        text-indent: -9999px;
+        margin-bottom: 10px;
+        margin-right: 0;
+        margin-left: auto;
+        @media screen and (max-width: 500px) {
+          margin-right: auto;
+        }
+      }
+      .logo-bem {
+        height: 12px;
+        width: 223px;
+        @include bg-image("berlingske_logo.png");
+        text-indent: -9999px;
+        @media screen and (max-width: 500px) {
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+      }
+    }
+  }
+  .logo {
+    display: block;
+    height: 137px;
+    width: 225px;
+    @include bg-image("tbt_logo.png");
+    text-indent: -9999px;
+    @media screen and (max-width: 500px) {
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 20px;
+    }
+  }
+}

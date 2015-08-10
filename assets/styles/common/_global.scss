@@ -1,0 +1,49 @@
+@mixin bg-image($src) {
+  background-image: url($image-path + $src);
+  background-repeat:no-repeat;
+  background-size:contain;
+  background-position:center;
+  max-width: 100%;
+}
+
+//Reset
+.main {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+aside.sidebar {
+  display:none;
+}
+
+
+body {
+  font-size: 16px;
+  font-family: $content-font;
+  p, {
+    font-family: $content-font;
+  }
+  h1, h2 {
+    font-family: times new roman, serif;
+  }
+  h3, h4, h5, h6 {
+    font-family: $content-font;
+  }
+
+  .page-content, .white {
+    font-size: 16px;
+    color: rgb(255, 255, 255);
+    text-shadow: 0.5px 1px 13px rgba(21, 21, 21, 0.6);
+    line-height: 1.438;
+
+  }
+  .page {
+    a, a:hover, a:active, a:visited {
+      color: #c1b49a
+    }
+  }
+  .main-container {
+    padding-bottom: 60px;
+  }
+
+}

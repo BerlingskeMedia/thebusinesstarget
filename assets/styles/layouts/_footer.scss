@@ -1,0 +1,50 @@
+footer {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #fff;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-image: url($image-path + "bg.png");
+  width:100%;
+  a {
+    color: #fff;
+    display:block;
+    font-size: 13px;
+    color: rgb(255, 255, 255);
+    text-decoration:none;
+    font-weight:bold;
+    &:hover {
+      color: #b1c6c9;
+    }
+  }
+  .contact {
+    @media screen and (max-width: 767px) {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    p {
+
+      margin: 0;
+    }
+  }
+  .tbt_logo_small {
+    @include bg-image("tbt_logo_small.png");
+    text-indent: -9999px;
+    height: 106px;
+    width: 197px;
+    float:right;
+    @media screen and (max-width: 767px) {
+      float: none;
+      margin: 0 auto;
+    }
+  }
+  nav {
+    margin: 0 auto;
+    width: 50%;
+    @media screen and (max-width: 767px) {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+  }
+
+}

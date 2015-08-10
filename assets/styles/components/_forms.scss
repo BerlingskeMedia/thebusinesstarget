@@ -1,0 +1,78 @@
+form {
+  input, select, button.submit {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #80a3a8;
+    border-radius: 7px;
+    border: none;
+    margin: 8px 0 8px 0;
+    height: 42px;
+  }
+  input[type="submit"], button.submit, button.step-two {
+    background-color: rgb(8, 56, 74);
+    color: #ffffff;
+    display: block;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 7px;
+    border: none;
+    height: 42px;
+  }
+  input[type="submit"], button.submit{
+    @media (max-width: $screen-sm-max) {
+      margin-top: 45px;
+    }
+  }
+
+  .ng-pristine.ng-invalid {
+    border:0;
+    outline:none;
+    box-shadow:none !important;
+  }
+  .step-two::after {
+    content: " ";
+    width: 10px;
+    height: 10px;
+    margin-left: 4px;
+    display: inline-block;
+    @include bg-image("hvid_pil.png")
+  }
+  input[type="checkbox"] {
+    display: inline-block;
+    height: auto;
+    width: auto;
+  }
+  .bi.choice {
+    margin: 5px 0;
+    font-size: 13px;
+    @media (max-width: $screen-sm-max) {
+      font-size: 15px;
+    }
+    @media screen and (max-width: 500px) {
+      margin: 10px 0;
+    }
+    label {
+      margin-left: 5px;
+    }
+  }
+  .terms {
+    margin-top: 10px;
+    input {
+      width: 14px;
+      height: auto;
+      display:inline;
+      width: initial;
+      float: left;
+      margin-right: 7px;
+    }
+    div {
+      float: left;
+      text-align: left;
+      display:inline;
+    }
+  }
+
+
+}

@@ -1,0 +1,87 @@
+.points {
+  background-color: #9ea4a6;
+  article {
+    position: relative;
+    margin: 0 auto;
+    margin-bottom: 60px;
+    padding: 0 19px 0 5px;
+    text-align: center;
+    background-repeat: no-repeat;
+    h3 {
+      padding-top: 20px;
+      margin-top: 0;
+      font-size: 19px;
+      font-weight: bold;
+      color: rgb(1, 30, 46);
+      margin-bottom: 0px;
+    }
+    .divider {
+      font-size: 22px;
+      margin: 0;
+      margin-bottom: 10px;
+    }
+
+    font-size: 15px;
+    color: #003e4f;
+    font-weight: bold;
+    margin-top: -15px;
+    width: 264px;
+    height: 259px;
+    .image {
+      display: block;
+      height: 63px;
+      width: 63px;
+      margin: 0 auto;
+      position: absolute;
+      left: 0;
+      right: 17px;
+      bottom: 23px;
+    }
+    &.left {
+      background-image: url($image-path + "boks_1.png");
+      .image {
+        @include bg-image("mail_ikon.png");
+      }
+    }
+    &.middle {
+      background-image: url($image-path + "boks_2.png");
+      .image {
+        @include bg-image("profil_ikon.png");
+      }
+    }
+    &.right {
+      .image {
+        @include bg-image("free_ikon.png");
+        left: 17px;
+      }
+      @media (max-width: $screen-md-max) {
+        background-image: url($image-path + "boks_2.png");
+        padding: 0 19px 0 5px;
+        .image {
+          left: 0px;
+          right: 17px
+        }
+      }
+      @media (min-width: $screen-lg-min) {
+        .image {
+          left: 28px;
+        }
+      }
+      padding: 0px 5px 0 19px;
+      background-image: url($image-path + "boks_3.png");
+    }
+    @media (max-width: 300px) {
+      width: 100%;
+      background-image: none !important;
+      height: auto;
+      .image {
+        position: initial;
+        left: 0px;
+        right: 17px
+      }
+    }
+
+
+
+  }
+}

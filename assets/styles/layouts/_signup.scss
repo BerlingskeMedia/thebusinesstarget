@@ -1,0 +1,113 @@
+.page .signup {
+  .signup-container {
+    padding: 45px;
+    border-radius: 11px;
+    background-color: rgb(177, 198, 201);
+  }
+  h2 {
+    margin: 0;
+    margin-bottom: 28px;
+    color: rgb(1, 30, 46);
+    font-weight: bold;
+    line-height: 1.139;
+    text-align: center;
+    font-size: 36px;
+    @media (max-width: $screen-sm-max) {
+      font-size: 25px;
+    }
+  }
+  .login {
+    font-size: 16px;
+    color: rgb(255, 255, 255);
+    text-shadow: 0.5px 1px 13px rgba(21, 21, 21, 0.6);
+    line-height: 1.438;
+    text-align: center;
+    margin: 30px;
+    a {
+      color: #c1b49a;
+      text-decoration: none;
+      font-weight: bold;
+      &::after{
+        content: " ";
+        width: 10px;
+        height: 10px;
+        margin-left: 4px;
+        display: inline-block;
+        @include bg-image("pil.png")
+      }
+    }
+  }
+  .stage {
+    margin: 20px auto;
+    width: 72px;
+    height: 17px;
+    &.one {
+      @include bg-image("progress1.png");
+    }
+    &.two {
+      @include bg-image("progress2.png");
+    }
+    &.three {
+      @include bg-image("progress3.png");
+    }
+  }
+  .divider {
+    height: 1px;
+    margin: 20px -5px;
+    background-color: rgb(15, 77, 94);
+  }
+  .terms {
+    margin-bottom: 10px;
+    display: table;
+  }
+  .conditions {
+    font-size: 13px;
+    color: #555;
+    margin: 0 20px;
+    visibility:hidden;
+    opacity:0;
+    max-height: 0;
+    transition:all 0.5s ease-in;
+    overflow: hidden;
+
+    &.visible {
+      visibility:visible;
+      opacity:1;
+      max-height: 500px;
+    }
+  }
+
+  .view.thanks {
+    p {
+      text-align: center;
+    }
+    a {
+      color: #000;
+      font-weight: bold;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    .brand {
+      font-weight: bold;
+    }
+  }
+
+  iframe {
+    width: 100% !important;
+  }
+  div {
+    a, a:hover, a:active, a:visited {
+      color: black;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  }
+  .signup-submit {
+    margin-top: 10px;
+    clear: both;
+
+  }
+
+
+}

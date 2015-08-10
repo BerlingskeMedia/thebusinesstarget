@@ -1,0 +1,39 @@
+.page.campaign, .page.static {
+  .bg-image {
+    height: 100%;
+    width: 100%;
+    background-color: #014052;
+    background-image: url('img/geo_bg.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+  }
+  h1 {
+    font-size: 62px;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    line-height: 1.1;
+    text-align: center;
+    text-shadow: 0.5px 1px 13px rgba(21, 21, 21, 0.6);
+    margin: 40px 0 20px 0;
+    @media (max-width: $screen-sm-max) {
+      font-size: 28px;
+    }
+  }
+  .page-content {
+    margin: 30px;
+  }
+}
+.page.static {
+  h1 {
+    border-top: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    padding: 10px;
+    margin-bottom: 40px;
+  }
+}
+.page.campaign {
+  .page-content {
+    text-align: center;
+  }
+}
