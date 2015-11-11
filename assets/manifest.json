@@ -22,6 +22,6 @@
     }
   },
   "config": {
-    "devUrl": "http://businesstarget.local/"
+    "devUrl": "http://businesstarget:9997/"
   }
 }

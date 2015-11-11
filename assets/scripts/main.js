@@ -166,19 +166,18 @@
     }])
  .controller('SignupController', ['$scope', '$location', '$http', 'apiService', 'lodash', 'localStorageService', function($scope, $location, $http, apiService, lodash, localStorageService) {
 
-   var interests = localStorageService.get("interests");
-   if (interests === null) {
-      apiService.interests().success(function(response, status) {
-        var _ = lodash;
-        var data = response.root.data;
-        interests = _.filter(data.rowset, function(elem) {
-          return elem['@attributes'].id === 'interests';
-        });
-        interests = interests[0].row;
-        localStorageService.set("interests", interests);
-        $scope.interests = interests;
+    var interests;
+    apiService.interests().success(function(response, status) {
+      var _ = lodash;
+      var data = response.root.data;
+      interests = _.filter(data.rowset, function(elem) {
+        return elem['@attributes'].id === 'interests';
       });
-    }
+      interests = interests[0].row;
+      localStorageService.set("interests", interests);
+      $scope.interests = interests;
+    });
+
     $scope.interests = interests;
     $scope.businessinterests = [];
     $scope.user = {};

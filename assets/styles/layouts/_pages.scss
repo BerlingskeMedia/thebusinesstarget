@@ -1,5 +1,5 @@
 .page.campaign, .page.static {
-  .bg-image {
+    .bg-image {
     height: 100%;
     width: 100%;
     background-color: #014052;
@@ -33,7 +33,22 @@
   }
 }
 .page.campaign {
+  position: relative;
   .page-content {
     text-align: center;
   }
+  .bg-image {
+    min-height: 700px;
+    background-size: cover;
+
+
+  }
+  .overlay{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: #014253;
+    opacity: .5;
+  }
+
 }

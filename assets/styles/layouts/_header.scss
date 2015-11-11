@@ -36,9 +36,9 @@ header.banner {
         }
       }
       .logo-bem {
-        height: 12px;
-        width: 223px;
-        @include bg-image("berlingske_logo.png");
+        height: 26px;
+        width: 200px;
+        @include bg-image("berlingske_logo_new.png");
         text-indent: -9999px;
         @media screen and (max-width: 500px) {
           margin-left: auto;
