@@ -165,7 +165,6 @@
        };
     }])
  .controller('SignupController', ['$scope', '$location', '$http', 'apiService', 'lodash', 'localStorageService', function($scope, $location, $http, apiService, lodash, localStorageService) {
-
     var interests;
     apiService.interests().success(function(response, status) {
       var _ = lodash;
@@ -306,5 +305,4 @@
 
   // Load Events
   $(document).ready(UTIL.loadEvents);
-
-})(jQuery); // Fully reference jQuery after this point.
+})(jQuery);
