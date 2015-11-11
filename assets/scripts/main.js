@@ -49,14 +49,15 @@
     .setPrefix('businesstarget');
   })
   .factory('apiService', ['$http', function($http) {
-    var doRequest = function() {
-      var interestUrl = "/wp-content/themes/businesstarget/api/interests.php";
-      return $http({
-        url: interestUrl
-      });
+    var BASE_URL = '/wp-content/themes/businesstarget/api/';
+    var getInterests = function() {
+      return $http.get(BASE_URL + 'interests.php').then(_httpUnwrapper);
     };
+    function _httpUnwrapper(response) {
+      return response.data;
+    }
     return {
-      interests: function() { return doRequest(); },
+      getInterests: getInterests,
     };
   }])
   .controller('LoginController', ['$scope', '$location', '$http', function($scope, $location, $http) {
@@ -165,19 +166,11 @@
        };
     }])
  .controller('SignupController', ['$scope', '$location', '$http', 'apiService', 'lodash', 'localStorageService', function($scope, $location, $http, apiService, lodash, localStorageService) {
-    var interests;
-    apiService.interests().success(function(response, status) {
-      var _ = lodash;
-      var data = response.root.data;
-      interests = _.filter(data.rowset, function(elem) {
-        return elem['@attributes'].id === 'interests';
-      });
-      interests = interests[0].row;
-      localStorageService.set("interests", interests);
+    apiService.getInterests().then(function(interests) {
       $scope.interests = interests;
+      console.log(interests);
     });
 
-    $scope.interests = interests;
     $scope.businessinterests = [];
     $scope.user = {};
     var base_url = "/wp-content/themes/businesstarget/api/";
