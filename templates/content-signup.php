@@ -6,6 +6,8 @@
   $lid = get_field('location_id');
   $nlid = get_field('newsletter_id', 'option');
   $mid = get_field('media_id', 'option');
+  $show_bem_permission = get_field('show_bem_permission', 'option');
+  $show_bem_permission_value = $show_bem_permission ? 'true' : 'false';
   if (!$lid) {
     $lid = $glid;
   }
@@ -22,7 +24,7 @@
       <div ng-view></div>
     </div>
     <div class="col-sm-8 col-sm-offset-2">
-      <p class="login white">Er du allerede medlem? <a href="#login">Log ind</a></p>
+      <p class="login white">Allerede tilmeldt? <a href="#login">Opdater din profil her</a></p>
     </div>
   </div>
 
@@ -53,7 +55,7 @@
     </div>
     <div class="conditions" ng-class="{visible: displayTerms || user.accepted}"><?php the_field('terms', 'option');?></div>
   </div>
-  <div class="col-sm-12 terms">
+  <div class="col-sm-12 terms" ng-if="<?php echo $show_bem_permission_value ?>">
     <input type="checkbox" ng-model="user.bem_permission" name="terms" />
     <div class="terms-text" ng-click="displayBemTerms = true"><?php the_field('bem_signup_teaser', 'option');?></div>
     <div class="conditions" ng-class="{visible: displayBemTerms || user.bem_permission}"><?php the_field('bem_terms', 'option');?></div>
@@ -72,11 +74,11 @@
       <div class="col-sm-6">
         <select name="employees" ng-required="true" ng-model="user.employees">
             <option disabled selected value="">Antal ansatte</option>
-            <option ng-repeat="i in interests | filter: {interesse_parent_id: 335}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
+            <option ng-repeat="i in interests | filter: {interesse_parent_id: 335} | orderBy: 'interesse_id'" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
         </select>
         <select name="managementlevel" ng-required="true" ng-model="user.managementlevel">
             <option disabled selected value="">Ledelsesniveau</option>
-            <option ng-repeat="i in interests | filter: {interesse_parent_id: 391}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
+            <option ng-repeat="i in interests | filter: {interesse_parent_id: 391} | orderBy: 'interesse_id'" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
         </select>
         <select name="buyer" ng-required="true" ng-model="user.buyer">
             <option disabled selected value="">Involveret i køb</option>
@@ -146,11 +148,11 @@
     <div class="col-sm-6">
       <select name="employees" ng-required="true" ng-model="user.employees">
           <option disabled value="">Antal ansatte</option>
-          <option ng-selected="my_interests.indexOf(i.interesse_id) > -1" ng-repeat="i in interests | filter: {interesse_parent_id: 335}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
+          <option ng-selected="my_interests.indexOf(i.interesse_id) > -1" ng-repeat="i in interests | filter: {interesse_parent_id: 335} | orderBy: 'interesse_id'" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
       </select>
       <select name="managementlevel" ng-required="true" ng-model="user.managementlevel">
           <option disabled value="">Ledelsesniveau</option>
-          <option ng-selected="my_interests.indexOf(i.interesse_id) > -1" ng-repeat="i in interests | filter: {interesse_parent_id: 391}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
+          <option ng-selected="my_interests.indexOf(i.interesse_id) > -1" ng-repeat="i in interests | filter: {interesse_parent_id: 391} | orderBy: 'interesse_id'" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
       </select>
       <select name="buyer" ng-required="true" ng-model="user.buyer">
           <option disabled value="">Involveret i køb</option>
@@ -181,7 +183,8 @@
 </form>
 </script>
 <script type="text/ng-template" id="login.html">
-  <h2>Login</h2>
+  <h2>Adgang til min profil</h2>
+  <p>Sæt din e-mail ind og vi sender dig et link til din profil</p>
   <form name="loginform">
     <div ng-hide="displayThanks">
       <input type="email" placeholder="E-mail" name="mail" ng-model="mail" ng-required="true"/>

@@ -3,7 +3,7 @@
 
 
   $mid = 34;
-  $nlids = 2;
+  $nlids = 844;
 
   $postdata = file_get_contents("php://input");
   $request = json_decode($postdata);
@@ -12,6 +12,7 @@
 
   $email = $request->email;
   $lid = $request->lid;
+  $lid = 1732;
   $intids = $request->intids;
 
   $url = sprintf($url_format, $mid, $email, $lid, $nlids, $intids);

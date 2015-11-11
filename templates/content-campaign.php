@@ -6,6 +6,9 @@
 
 <div class="page campaign">
   <div class="bg-image" style="background-image: url(<?php echo $bg ?>)">
+    <?php if (get_field('show_overlay') == true ) : ?>
+    	<div class="overlay"></div>
+    <?php endif; ?>
     <div class="container main-container">
       <div class="row">
         <div class="col-md-8 col-md-offset-2">

@@ -210,6 +210,7 @@
          return;
         }
         var ints = [];
+        var lid = businesstarget_setup.lid;
         ints.push(user.employees.toString());
         ints.push(user.managementlevel.toString());
         ints.push(user.buyer.toString());
@@ -217,7 +218,7 @@
         ints.push(user.car.toString());
 
         var mail = localStorageService.get("mail");
-        $http.post(add_url, {email:mail, lid: 1, intids:ints.join(","),}).
+        $http.post(add_url, {email:mail, lid: lid, intids:ints.join(","),}).
          success(function(data, status, headers, config) {
            localStorageService.set("state", 3);
            $location.path("step3");
@@ -230,10 +231,11 @@
         }
         var mail = localStorageService.get("mail");
         var intids = "";
+        var lid = businesstarget_setup.lid;
         if (typeof user.businessinterests !== "undefined" && user.businessinterests.length > 0) {
           intids = user.businessinterests.join(",");
         }
-        $http.post(add_url, {email:mail, lid: 1, intids:intids}).
+        $http.post(add_url, {email:mail, lid: lid, intids:intids}).
          success(function(data, status, headers, config) {
            localStorageService.set("state", 1);
            $location.path("thanks");
