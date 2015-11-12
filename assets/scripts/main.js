@@ -91,24 +91,43 @@
      var interests_promise = apiService.getInterests();
 
      var find_choice = function(my_choices, interests, parent_id) {
-       var valid_choices_objects = _.filter(interests, _.matchesProperty('interesse_parent_id', parent_id));
+       var valid_choices_objects = _.filter(interests, _.matchesProperty('interesse_parent_id', parseInt(parent_id)));
        var valid_choices = _.map(valid_choices_objects, _.property('interesse_id'));
        return _.intersection(valid_choices, my_choices);
      };
 
+     function remove_TBT(tbt, my_interests) {
+       var valid_choices = _.map(tbt, _.property('interesse_id'));
+       var tbt_intersection = _.intersection(valid_choices, my_interests);
+       console.log(tbt_intersection);
+       var without_tbt = [];
+       for (var i = 0; i < my_interests.length; i++) {
+         var interest = my_interests[i];
+         if (tbt_intersection.indexOf(interest) === -1) {
+           without_tbt.push(interest);
+         }
+       }
+       return without_tbt;
+
+     }
+
      $q.all([my_user_promise, interests_promise]).then(function(result) {
-       $scope.user = result[0];
-       $scope.interests = result[1];
+        $scope.user = result[0];
 
-       $scope.user.occupation = _.first(find_choice($scope.my_interests, $scope.interests, "343"));
-       $scope.user.industry = _.first(find_choice($scope.my_interests, $scope.interests, "310"));
-       $scope.user.employees = _.first(find_choice($scope.my_interests, $scope.interests, "335"));
-       $scope.user.managementlevel = _.first(find_choice($scope.my_interests, $scope.interests, "391"));
-       $scope.user.buyer = _.first(find_choice($scope.my_interests, $scope.interests, "400"));
-       $scope.user.traveller = _.first(find_choice($scope.my_interests, $scope.interests, "403"));
-       $scope.user.car = _.first(find_choice($scope.my_interests, $scope.interests, "397"));
-       $scope.user.businessinterests = find_choice($scope.my_interests, $scope.interests, "407");
+        $scope.interests = result[1];
+        var user = $scope.user;
 
+       $scope.user.occupation = _.first(find_choice(user.interesser, $scope.interests, "343"));
+       $scope.user.industry = _.first(find_choice(user.interesser, $scope.interests, "310"));
+       $scope.user.employees = _.first(find_choice(user.interesser, $scope.interests, "335"));
+       $scope.user.managementlevel = _.first(find_choice(user.interesser, $scope.interests, "391"));
+       $scope.user.buyer = _.first(find_choice(user.interesser, $scope.interests, "400"));
+       $scope.user.traveller = _.first(find_choice(user.interesser, $scope.interests, "403"));
+       $scope.user.car = _.first(find_choice(user.interesser, $scope.interests, "397"));
+       $scope.user.businessinterests = find_choice(user.interesser, $scope.interests, "407");
+
+      $scope.user.interesser = remove_TBT($scope.interests, $scope.user.interesser);
+      
      });
 
      $scope.submit_edit = function(user) {
@@ -124,7 +143,16 @@
         interesser.push(user.traveller);
         interesser.push(user.car);
 
-        var payload = _.clone(user);
+        interesser = interesser.concat(user.businessinterests);
+        console.log(interesser);
+
+        var payload = {};
+        payload.ekstern_id = user.ekstern_id;
+        payload.fornavn = user.fornavn;
+        payload.efternavn = user.efternavn;
+        payload.nyhedsbreve = user.nyhedsbreve;
+        payload.postnummer_dk = user.postnummer_dk;
+        payload.email = user.email;
         payload.interesser = interesser;
 
         $http.post(edit_url, payload).success(function(data, status, headers, config) {
