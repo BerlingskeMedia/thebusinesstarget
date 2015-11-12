@@ -12,31 +12,35 @@
  var app = angular.module('businesstarget', ['ngRoute', 'ngLodash', 'checklist-model', 'LocalStorageModule', 'ng.shims.placeholder'])
  .config(['$routeProvider',
    function($routeProvider) {
-     $routeProvider.
-       when('/step1', {
+     $routeProvider
+       .when('/step1', {
          templateUrl: 'step1.html',
          controller: 'SignupController'
-       }).
-       when('/step2', {
+       })
+       .when('/step2', {
          templateUrl: 'step2.html',
          controller: 'SignupController'
-       }).
-       when('/step3', {
+       })
+       .when('/step3', {
          templateUrl: 'step3.html',
          controller: 'SignupController'
-       }).
-       when('/thanks', {
+       })
+       .when('/thanks', {
          templateUrl: 'thanks.html',
-       }).
-       when('/edit/:ekstern_id', {
+       })
+       .when('/edit/:ekstern_id', {
          templateUrl: 'edit.html',
          controller: 'EditController'
-       }).
-       when('/login', {
+       })
+       .when('/login', {
          templateUrl: 'login.html',
          controller: 'LoginController'
-       }).
-       otherwise({
+       })
+       .when('/unsubscribe/:ekstern_id', {
+         templateUrl: 'unsubscribe.html',
+         controller: 'UnsubscribeController'
+       })
+       .otherwise({
          redirectTo: '/step1'
        });
  }])
@@ -64,6 +68,12 @@
       });
     };
 
+
+    var unsubscribe = function(ekstern_id) {
+      return $http.post(BASE_URL + 'unsubscribe.php', {ekstern_id: ekstern_id})
+      .then(_httpUnwrapper);
+    };
+
     var addInterests = function(interests) {
       return $http.post(BASE_URL + 'add.php', {doubleoptkey: doubleoptkey, interesser: interests})
       .then(_httpUnwrapper);
@@ -78,7 +88,8 @@
       getUser: getUser,
       signup: signup,
       addInterests: addInterests,
-      get_doubleoptkey: get_doubleoptkey
+      get_doubleoptkey: get_doubleoptkey,
+      unsubscribe: unsubscribe
     };
   }])
   .controller('LoginController', ['$scope', '$location', '$http', function($scope, $location, $http) {
@@ -96,6 +107,18 @@
       };
 
    }])
+   .controller('UnsubscribeController', ['$scope', '$location', '$http', '$routeParams', 'apiService', function($scope, $location, $http, $routeParams, apiService) {
+     apiService.getUser($routeParams.ekstern_id)
+     .then(function(user) {
+       $scope.user = user;
+     });
+      $scope.submit_unsubscribe = function () {
+        apiService.unsubscribe($routeParams.ekstern_id).then(function() {
+          $scope.displayThanks = true;
+        });
+
+      };
+  }])
    .controller('EditController', ['$scope', '$location', '$http', '$routeParams', '$q', 'apiService', 'lodash', function($scope, $location, $http, $routeParams, $q, apiService, lodash) {
      var _ = lodash;
      var base_url = "/wp-content/themes/businesstarget/api/";

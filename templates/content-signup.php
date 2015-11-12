@@ -207,8 +207,8 @@
   <h2>Afmeld</h2>
   <form>
     <div ng-hide="displayThanks">
-      <input type="email" placeholder="E-mail" name="mail" value="{{email}}" ng-required="true"/>
-      <input type="submit" ng-show="email" name="Submit" class="submit" value="Afmeld" ng-click="submit_unsubscribe()"/>
+      <input type="email" placeholder="E-mail" name="mail" ng-model="user.email" ng-required="true"/>
+      <input type="submit" name="Submit" class="submit" value="Afmeld" ng-click="submit_unsubscribe()"/>
     </div>
 
     <div ng-show="displayThanks">
