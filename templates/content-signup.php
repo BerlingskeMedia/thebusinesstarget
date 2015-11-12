@@ -34,12 +34,12 @@
 <form name="formstep1">
   <div class="row">
     <div class="col-sm-6">
-      <input type="text" name="navn" ng-model="user.first_name" ng-required="true" placeholder="Fornavn"/>
-      <input type="text" name="navn" ng-model="user.last_name" ng-required="true" placeholder="Efternavn"/>
-      <input type="email" name="mail" ng-model="user.mail" ng-required="true" placeholder="E-mail"/>
+      <input type="text" name="navn" ng-model="user.fornavn" ng-required="true" placeholder="Fornavn"/>
+      <input type="text" name="navn" ng-model="user.efternavn" ng-required="true" placeholder="Efternavn"/>
+      <input type="email" name="mail" ng-model="user.email" ng-required="true" placeholder="E-mail"/>
     </div>
     <div class="col-sm-6">
-    <input type="number" name="zip" ng-required="true" ng-model="user.zip" min="999" max="9999" placeholder="Postnummer"/>
+    <input type="number" name="zip" ng-required="true" ng-model="user.postnummer_dk" min="999" max="9999" placeholder="Postnummer"/>
     <select name="stilling" ng-required="true" ng-model="user.occupation">
         <option disabled selected value="">Vælg stilling</option>
         <option ng-repeat="i in interests | filter: {interesse_parent_id: 343}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
@@ -50,10 +50,10 @@
     </select>
   </div>
   <div class="col-sm-12 terms">
-    <input type="checkbox" ng-required="true" ng-model="user.accepted" name="terms" />
+    <input type="checkbox" ng-required="true" ng-model="accepted" name="terms" />
     <div class="terms-text" ng-click="displayTerms = true">Jeg accepterer <span class="terms-emph">betingelserne</span>
     </div>
-    <div class="conditions" ng-class="{visible: displayTerms || user.accepted}"><?php the_field('terms', 'option');?></div>
+    <div class="conditions" ng-class="{visible: displayTerms || accepted}"><?php the_field('terms', 'option');?></div>
   </div>
   <div class="col-sm-12 terms" ng-if="<?php echo $show_bem_permission_value ?>">
     <input type="checkbox" ng-model="user.bem_permission" name="terms" />

@@ -40,26 +40,44 @@
          redirectTo: '/step1'
        });
  }])
- .config(function (localStorageServiceProvider) {
-  localStorageServiceProvider
-    .setPrefix('businesstarget');
-  })
   .factory('apiService', ['$http', function($http) {
     var BASE_URL = '/wp-content/themes/businesstarget/api/';
     var getInterests = function() {
       return $http.get(BASE_URL + 'interests.php').then(_httpUnwrapper);
     };
+    var doubleoptkey;
+
+    function get_doubleoptkey() {
+      return doubleoptkey;
+    }
 
     var getUser = function(ekstern_id) {
       return $http.post(BASE_URL + 'me.php', {ekstern_id: ekstern_id}).then(_httpUnwrapper);
     };
 
+    var signup = function(user) {
+      return $http.post(BASE_URL + 'signup.php', user)
+      .then(_httpUnwrapper)
+      .then(function(data) {
+        doubleoptkey = data.double_opt_key;
+        return data;
+      });
+    };
+
+    var addInterests = function(user) {
+      return $http.post(BASE_URL + 'add.php', user).then(_httpUnwrapper);
+    };
+
     function _httpUnwrapper(response) {
       return response.data;
     }
+
     return {
       getInterests: getInterests,
-      getUser: getUser
+      getUser: getUser,
+      signup: signup,
+      addInterests: addInterests,
+      get_doubleoptkey: get_doubleoptkey
     };
   }])
   .controller('LoginController', ['$scope', '$location', '$http', function($scope, $location, $http) {
@@ -95,7 +113,6 @@
      function remove_TBT(tbt, my_interests) {
        var valid_choices = _.map(tbt, _.property('interesse_id'));
        var tbt_intersection = _.intersection(valid_choices, my_interests);
-       console.log(tbt_intersection);
        var without_tbt = [];
        for (var i = 0; i < my_interests.length; i++) {
          var interest = my_interests[i];
@@ -104,7 +121,6 @@
          }
        }
        return without_tbt;
-
      }
 
      $q.all([my_user_promise, interests_promise]).then(function(result) {
@@ -140,7 +156,7 @@
         interesser.push(user.car);
 
         interesser = interesser.concat(user.businessinterests);
-        console.log(interesser);
+
 
         var payload = {};
         payload.ekstern_id = user.ekstern_id;
@@ -157,16 +173,15 @@
      };
     }])
 
- .controller('SignupController', ['$scope', '$location', '$http', 'apiService', 'lodash', 'localStorageService', function($scope, $location, $http, apiService, lodash, localStorageService) {
+ .controller('SignupController', ['$scope', '$location', '$http', 'apiService', 'lodash', function($scope, $location, $http, apiService, lodash) {
+   if (!apiService.get_doubleoptkey()) {
+     $location.path("step1");
+   }
+
     apiService.getInterests().then(function(interests) {
       $scope.interests = interests;
     });
 
-    $scope.businessinterests = [];
-    $scope.user = {};
-    var base_url = "/wp-content/themes/businesstarget/api/";
-    var signup_url = base_url + 'signup.php';
-    var add_url = base_url + 'add.php';
      $scope.submit_step1 = function(user) {
 
        if (!$scope.formstep1.$valid) {
@@ -178,16 +193,23 @@
        var ints = [];
        ints.push(user.industry.toString());
        ints.push(user.occupation.toString());
-       $http.post(signup_url, {email:user.mail, lid: lid, nlids: nlid, intids:ints.join(","), zip: user.zip, first_name:user.first_name, last_name: user.last_name, bem_permission: user.bem_permission}).
-        success(function(data, status, headers, config) {
-          localStorageService.set("uid", data.uid);
-          localStorageService.set("state", 2);
-          localStorageService.set("user", user);
-          localStorageService.set("mail", user.mail);
-          $location.path("step2");
-        });
+       user.interesser = ints;
+
+       var payload = lodash.clone(user);
+       delete payload.occupation;
+       delete payload.industry;
+
+       apiService.signup(payload).then(function(response) {
+         console.log(response);
+         $scope.doubleoptkey = response.double_opt_key;
+         console.log($scope.doubleoptkey);
+         $location.path("step2");
+       });
      };
+
      $scope.submit_step2 = function(user) {
+       console.log($scope.doubleoptkey);
+
        if (!$scope.formstep2.$valid) {
          return;
         }
@@ -199,10 +221,9 @@
         ints.push(user.traveller.toString());
         ints.push(user.car.toString());
 
-        var mail = localStorageService.get("mail");
+
         $http.post(add_url, {email:mail, lid: lid, intids:ints.join(","),}).
          success(function(data, status, headers, config) {
-           localStorageService.set("state", 3);
            $location.path("step3");
          });
 
@@ -211,7 +232,7 @@
        if (!$scope.formstep3.$valid) {
          return;
         }
-        var mail = localStorageService.get("mail");
+
         var intids = "";
         var lid = businesstarget_setup.lid;
         if (typeof user.businessinterests !== "undefined" && user.businessinterests.length > 0) {
@@ -219,7 +240,7 @@
         }
         $http.post(add_url, {email:mail, lid: lid, intids:intids}).
          success(function(data, status, headers, config) {
-           localStorageService.set("state", 1);
+
            $location.path("thanks");
          });
 
