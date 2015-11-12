@@ -103,15 +103,17 @@
 </script>
 <script type="text/ng-template" id="step3.html">
   <?php the_field('step3_header', 'option');?>
+
   <form name="formstep3">
     <div class="row">
+      {{businessinterests}}
       <div class="bi choice col-lg-4 col-sm-6" ng-repeat="i in interests | filter: {interesse_parent_id: 407}">
-        <input type="checkbox" checklist-model="user.businessinterests" checklist-value="i.interesse_id" /><label>{{i.interesse_navn}}</label>
+        <input type="checkbox" checklist-model="businessinterests" checklist-value="i.interesse_id" /><label>{{i.interesse_navn}}</label>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-12">
-        <input type="submit" class="col-sm-4 col-sm-offset-4 submit" ng-click="submit_step3(user)" value="Gem"/>
+        <input type="submit" class="col-sm-4 col-sm-offset-4 submit" ng-click="submit_step3(businessinterests)" value="Gem"/>
       </div>
     </div>
   </form>

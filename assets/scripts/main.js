@@ -64,8 +64,9 @@
       });
     };
 
-    var addInterests = function(user) {
-      return $http.post(BASE_URL + 'add.php', user).then(_httpUnwrapper);
+    var addInterests = function(interests) {
+      return $http.post(BASE_URL + 'add.php', {doubleoptkey: doubleoptkey, interesser: interests})
+      .then(_httpUnwrapper);
     };
 
     function _httpUnwrapper(response) {
@@ -181,6 +182,7 @@
     apiService.getInterests().then(function(interests) {
       $scope.interests = interests;
     });
+    $scope.businessinterests = [];
 
      $scope.submit_step1 = function(user) {
 
@@ -200,50 +202,41 @@
        delete payload.industry;
 
        apiService.signup(payload).then(function(response) {
-         console.log(response);
          $scope.doubleoptkey = response.double_opt_key;
-         console.log($scope.doubleoptkey);
          $location.path("step2");
        });
      };
 
      $scope.submit_step2 = function(user) {
-       console.log($scope.doubleoptkey);
-
        if (!$scope.formstep2.$valid) {
          return;
         }
         var ints = [];
-        var lid = businesstarget_setup.lid;
+
         ints.push(user.employees.toString());
         ints.push(user.managementlevel.toString());
         ints.push(user.buyer.toString());
         ints.push(user.traveller.toString());
         ints.push(user.car.toString());
 
-
-        $http.post(add_url, {email:mail, lid: lid, intids:ints.join(","),}).
-         success(function(data, status, headers, config) {
+        apiService.addInterests(ints)
+        .then(function(data) {
            $location.path("step3");
          });
-
      };
-     $scope.submit_step3 = function(user) {
+     $scope.submit_step3 = function(businessinterests) {
        if (!$scope.formstep3.$valid) {
          return;
         }
 
-        var intids = "";
-        var lid = businesstarget_setup.lid;
-        if (typeof user.businessinterests !== "undefined" && user.businessinterests.length > 0) {
-          intids = user.businessinterests.join(",");
+
+        if ($scope.businessinterests.length === 0) {
+          return $location.path("thanks");
         }
-        $http.post(add_url, {email:mail, lid: lid, intids:intids}).
-         success(function(data, status, headers, config) {
-
-           $location.path("thanks");
-         });
-
+        apiService.addInterests($scope.businessinterests)
+        .then(function(data) {
+          $location.path("thanks");
+        });
      };
   }]);
 
