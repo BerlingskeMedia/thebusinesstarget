@@ -126,20 +126,22 @@
 <form name="edit">
   <div class="row">
     <div class="col-sm-6">
-    <input type="text" name="navn" ng-model="user.first_name" ng-required="true" placeholder="Fornavn"/>
-    <input type="text" name="navn" ng-model="user.last_name" ng-required="true" placeholder="Efternavn"/>
-    <input type="email" name="mail" disabled ng-model="user.mail" placeholder="E-mail"/>
+    
+    <input type="text" name="navn" ng-model="user.fornavn" ng-required="true" placeholder="Fornavn"/>
+    <input type="text" name="navn" ng-model="user.efternavn" ng-required="true" placeholder="Efternavn"/>
+    <input type="email" name="mail" disabled ng-model="user.email" placeholder="E-mail"/>
     </div>
     <div class="col-sm-6">
-    <input type="number" name="zip" ng-required="true" ng-model="user.zip" min="999" max="9999" placeholder="Postnummer"/>
+    <input type="number" name="zip" ng-required="true" ng-model="user.postnummer_dk" min="999" max="9999" placeholder="Postnummer"/>
+
     <select name="stilling" ng-required="true" ng-model="user.occupation">
         <option disabled value="">Vælg stilling</option>
-        <option ng-selected="my_interests.indexOf(i.interesse_id) > -1" ng-repeat="i in interests | filter: {interesse_parent_id: 343}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
+        <option ng-selected="user.interesser.indexOf(i.interesse_id) > -1" ng-repeat="i in interests | filter: {interesse_parent_id: 343}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
     </select>
 
     <select name="branche" ng-required="true" class="select2" ng-model="user.industry" value="Vælg branche">
         <option disabled value="">Vælg branche</option>
-        <option ng-selected="my_interests.indexOf(i.interesse_id) > -1" ng-repeat="i in interests | filter: {interesse_parent_id: 310}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
+        <option ng-selected="user.interesser.indexOf(i.interesse_id) > -1" ng-repeat="i in interests | filter: {interesse_parent_id: 310}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
     </select>
     </div>
   </div>
@@ -148,21 +150,21 @@
     <div class="col-sm-6">
       <select name="employees" ng-required="true" ng-model="user.employees">
           <option disabled value="">Antal ansatte</option>
-          <option ng-selected="my_interests.indexOf(i.interesse_id) > -1" ng-repeat="i in interests | filter: {interesse_parent_id: 335} | orderBy: 'interesse_id'" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
+          <option ng-selected="user.interesser..indexOf(i.interesse_id) > -1" ng-repeat="i in interests | filter: {interesse_parent_id: 335} | orderBy: 'interesse_id'" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
       </select>
       <select name="managementlevel" ng-required="true" ng-model="user.managementlevel">
           <option disabled value="">Ledelsesniveau</option>
-          <option ng-selected="my_interests.indexOf(i.interesse_id) > -1" ng-repeat="i in interests | filter: {interesse_parent_id: 391} | orderBy: 'interesse_id'" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
+          <option ng-selected="user.interesser.indexOf(i.interesse_id) > -1" ng-repeat="i in interests | filter: {interesse_parent_id: 391} | orderBy: 'interesse_id'" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
       </select>
       <select name="buyer" ng-required="true" ng-model="user.buyer">
           <option disabled value="">Involveret i køb</option>
-          <option ng-selected="my_interests.indexOf(i.interesse_id) > -1" ng-repeat="i in interests | filter: {interesse_parent_id: 400}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
+          <option ng-selected="user.interesser.indexOf(i.interesse_id) > -1" ng-repeat="i in interests | filter: {interesse_parent_id: 400}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
       </select>
     </div>
     <div class="col-sm-6">
       <select name="car" ng-required="true" ng-model="user.car">
           <option disabled value="">Firmabil</option>
-          <option ng-selected="my_interests.indexOf(i.interesse_id) > -1" ng-repeat="i in interests | filter: {interesse_parent_id: 397}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
+          <option ng-selected="user.interesser.indexOf(i.interesse_id) > -1" ng-repeat="i in interests | filter: {interesse_parent_id: 397}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
       </select>
       <select name="traveller" ng-required="true" ng-model="user.traveller">
           <option disabled value="">Forretningsrejsende</option>
@@ -174,13 +176,15 @@
   <div class="row">
 
     <div class="bi choice col-lg-6 col-sm-6" ng-repeat="i in interests | filter: {interesse_parent_id: 407}">
-      <input type="checkbox" checklist-model="user.businessinterests" checklist-value="i.interesse_id" /><label>{{i.interesse_navn}}</label>
+      <input type="checkbox" checklist-model="user.interesser" checklist-value="i.interesse_id" /><label>{{i.interesse_navn}}</label>
     </div>
   </div>
   <div class="row">
     <input type="submit" class="col-sm-4 col-sm-offset-8 submit" ng-click="submit_edit(user)" value="Gem"/>
   </div>
+
 </form>
+
 </script>
 <script type="text/ng-template" id="login.html">
   <h2>Adgang til min profil</h2>

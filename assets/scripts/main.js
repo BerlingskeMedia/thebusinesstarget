@@ -28,7 +28,7 @@
        when('/thanks', {
          templateUrl: 'thanks.html',
        }).
-       when('/edit/:id', {
+       when('/edit/:ekstern_id', {
          templateUrl: 'edit.html',
          controller: 'EditController'
        }).
@@ -53,11 +53,17 @@
     var getInterests = function() {
       return $http.get(BASE_URL + 'interests.php').then(_httpUnwrapper);
     };
+
+    var getUser = function(ekstern_id) {
+      return $http.post(BASE_URL + 'me.php', {ekstern_id: ekstern_id}).then(_httpUnwrapper);
+    };
+
     function _httpUnwrapper(response) {
       return response.data;
     }
     return {
       getInterests: getInterests,
+      getUser: getUser
     };
   }])
   .controller('LoginController', ['$scope', '$location', '$http', function($scope, $location, $http) {
@@ -75,38 +81,24 @@
       };
 
    }])
-   .controller('EditController', ['$scope', '$location', '$http', '$routeParams', '$q', 'lodash', function($scope, $location, $http, $routeParams, $q, lodash) {
+   .controller('EditController', ['$scope', '$location', '$http', '$routeParams', '$q', 'apiService', 'lodash', function($scope, $location, $http, $routeParams, $q, apiService, lodash) {
      var _ = lodash;
      var base_url = "/wp-content/themes/businesstarget/api/";
-     var me_url = base_url + "me.php";
      var interests_url = base_url + "interests.php";
      var edit_url = base_url + "edit.php";
-     var my_id = $routeParams.id;
-     var me_promise = $http.post(me_url, {id: my_id});
-     var interests_promise = $http.get(interests_url);
+     var ekstern_id = $routeParams.ekstern_id;
+     var my_user_promise = apiService.getUser($routeParams.ekstern_id);
+     var interests_promise = apiService.getInterests();
 
-     var sanify_interests = function(interests) {
-       var i_arr = interests.split("|");
-       return _.map(i_arr, function(elem){
-        return elem.split(":")[0];
-       });
-     };
      var find_choice = function(my_choices, interests, parent_id) {
        var valid_choices_objects = _.filter(interests, _.matchesProperty('interesse_parent_id', parent_id));
        var valid_choices = _.map(valid_choices_objects, _.property('interesse_id'));
        return _.intersection(valid_choices, my_choices);
      };
 
-     $q.all([me_promise, interests_promise]).then(function(result) {
-       $scope.user = result[0].data;
-
-       var data = result[1].data.root.data;
-       interests = _.filter(data.rowset, function(elem) {
-         return elem['@attributes'].id === 'interests';
-       });
-       $scope.interests = interests[0].row;
-
-       $scope.my_interests = sanify_interests($scope.user.interests);
+     $q.all([my_user_promise, interests_promise]).then(function(result) {
+       $scope.user = result[0];
+       $scope.interests = result[1];
 
        $scope.user.occupation = _.first(find_choice($scope.my_interests, $scope.interests, "343"));
        $scope.user.industry = _.first(find_choice($scope.my_interests, $scope.interests, "310"));
@@ -115,9 +107,7 @@
        $scope.user.buyer = _.first(find_choice($scope.my_interests, $scope.interests, "400"));
        $scope.user.traveller = _.first(find_choice($scope.my_interests, $scope.interests, "403"));
        $scope.user.car = _.first(find_choice($scope.my_interests, $scope.interests, "397"));
-
        $scope.user.businessinterests = find_choice($scope.my_interests, $scope.interests, "407");
-
 
      });
 
@@ -125,26 +115,19 @@
        if (!$scope.edit.$valid) {
          return;
         }
-        var ints = [];
-        ints.push(user.occupation.toString());
-        ints.push(user.industry.toString());
+        var interesser = _.clone(user.interesser);
+        interesser.push(user.occupation);
+        interesser.push(user.industry);
+        interesser.push(user.employees);
+        interesser.push(user.managementlevel);
+        interesser.push(user.buyer);
+        interesser.push(user.traveller);
+        interesser.push(user.car);
 
-        ints.push(user.employees.toString());
-        ints.push(user.managementlevel.toString());
-        ints.push(user.buyer.toString());
-        ints.push(user.traveller.toString());
-        ints.push(user.car.toString());
-        var new_interests = ints.concat(user.businessinterests);
+        var payload = _.clone(user);
+        payload.interesser = interesser;
 
-
-        var turn_off = _.difference($scope.my_interests, new_interests);
-        var turn_on = new_interests;
-
-        var turn_off_string = _.map(turn_off, function(elem) {return elem+':0';}).join('|');
-        var turn_on_string = _.map(turn_on, function(elem) {return elem+':1';}).join('|');
-        var int_string = turn_off_string.length > 0 ? turn_off_string + '|' + turn_on_string : turn_on_string;
-
-        $http.post(edit_url, {user_id: my_id, first_name: user.first_name, last_name: user.last_name, zip: user.zip, ints: int_string}).success(function(data, status, headers, config) {
+        $http.post(edit_url, payload).success(function(data, status, headers, config) {
           window.location = "/#thanks";
         });
      };
@@ -162,13 +145,11 @@
            $http.post(unsubscribe_url, {id: $routeParams.id, nlid: nlid, email: $scope.email}).success(function(data, status, headers, config) {
              $scope.displayThanks = true;
            });
-
        };
     }])
  .controller('SignupController', ['$scope', '$location', '$http', 'apiService', 'lodash', 'localStorageService', function($scope, $location, $http, apiService, lodash, localStorageService) {
     apiService.getInterests().then(function(interests) {
       $scope.interests = interests;
-      console.log(interests);
     });
 
     $scope.businessinterests = [];
