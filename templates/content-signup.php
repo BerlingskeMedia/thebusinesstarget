@@ -106,7 +106,6 @@
 
   <form name="formstep3">
     <div class="row">
-      {{businessinterests}}
       <div class="bi choice col-lg-4 col-sm-6" ng-repeat="i in interests | filter: {interesse_parent_id: 407}">
         <input type="checkbox" checklist-model="businessinterests" checklist-value="i.interesse_id" /><label>{{i.interesse_navn}}</label>
       </div>

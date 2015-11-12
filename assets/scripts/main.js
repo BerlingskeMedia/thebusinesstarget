@@ -68,6 +68,18 @@
       });
     };
 
+    var editUser = function(user) {
+      return $http.post(BASE_URL + 'edit.php', user)
+      .then(_httpUnwrapper);
+    };
+
+    var login = function(email) {
+      return $http.post(BASE_URL + 'send_login.php', {mail:mail})
+      .then(_httpUnwrapper);
+    };
+
+
+
 
     var unsubscribe = function(ekstern_id) {
       return $http.post(BASE_URL + 'unsubscribe.php', {ekstern_id: ekstern_id})
@@ -89,25 +101,23 @@
       signup: signup,
       addInterests: addInterests,
       get_doubleoptkey: get_doubleoptkey,
-      unsubscribe: unsubscribe
+      unsubscribe: unsubscribe,
+      editUser: editUser
     };
   }])
-  .controller('LoginController', ['$scope', '$location', '$http', function($scope, $location, $http) {
-
-    var base_url = "/wp-content/themes/businesstarget/api/";
-    var login_url = base_url + "send_login.php";
+  .controller('LoginController', ['$scope', '$location', function($scope, $location) {
       $scope.submit_email = function(mail) {
           if (!$scope.loginform.$valid) {
             return;
            }
-          $http.post(login_url, {mail:mail}).success(function(data, status, headers, config) {
+          apiService.login(mail).then(function() {
 
           });
         $scope.displayThanks = true;
       };
 
    }])
-   .controller('UnsubscribeController', ['$scope', '$location', '$http', '$routeParams', 'apiService', function($scope, $location, $http, $routeParams, apiService) {
+   .controller('UnsubscribeController', ['$scope', '$location', '$routeParams', 'apiService', function($scope, $location, $routeParams, apiService) {
      apiService.getUser($routeParams.ekstern_id)
      .then(function(user) {
        $scope.user = user;
@@ -119,11 +129,9 @@
 
       };
   }])
-   .controller('EditController', ['$scope', '$location', '$http', '$routeParams', '$q', 'apiService', 'lodash', function($scope, $location, $http, $routeParams, $q, apiService, lodash) {
+   .controller('EditController', ['$scope', '$location', '$routeParams', '$q', 'apiService', 'lodash', function($scope, $location, $routeParams, $q, apiService, lodash) {
      var _ = lodash;
-     var base_url = "/wp-content/themes/businesstarget/api/";
-     var interests_url = base_url + "interests.php";
-     var edit_url = base_url + "edit.php";
+
      var ekstern_id = $routeParams.ekstern_id;
      var my_user_promise = apiService.getUser($routeParams.ekstern_id);
      var interests_promise = apiService.getInterests();
@@ -181,7 +189,6 @@
 
         interesser = interesser.concat(user.businessinterests);
 
-
         var payload = {};
         payload.ekstern_id = user.ekstern_id;
         payload.fornavn = user.fornavn;
@@ -190,14 +197,14 @@
         payload.postnummer_dk = user.postnummer_dk;
         payload.email = user.email;
         payload.interesser = interesser;
-
-        $http.post(edit_url, payload).success(function(data, status, headers, config) {
-          window.location = "/#thanks";
+        apiService.editUser(payload).then(function() {
+          $location.path('thanks');
         });
+
      };
     }])
 
- .controller('SignupController', ['$scope', '$location', '$http', 'apiService', 'lodash', function($scope, $location, $http, apiService, lodash) {
+ .controller('SignupController', ['$scope', '$location', 'apiService', 'lodash', function($scope, $location, apiService, lodash) {
    if (!apiService.get_doubleoptkey()) {
      $location.path("step1");
    }
