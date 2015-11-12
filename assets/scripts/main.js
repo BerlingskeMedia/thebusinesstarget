@@ -36,10 +36,6 @@
          templateUrl: 'login.html',
          controller: 'LoginController'
        }).
-       when('/unsubscribe/:id', {
-         templateUrl: 'unsubscribe.html',
-         controller: 'UnsubscribeController'
-       }).
        otherwise({
          redirectTo: '/step1'
        });
@@ -127,7 +123,7 @@
        $scope.user.businessinterests = find_choice(user.interesser, $scope.interests, "407");
 
       $scope.user.interesser = remove_TBT($scope.interests, $scope.user.interesser);
-      
+
      });
 
      $scope.submit_edit = function(user) {
@@ -161,20 +157,6 @@
      };
     }])
 
-   .controller('UnsubscribeController', ['$scope', '$location', '$http', '$routeParams', function($scope, $location, $http, $routeParams) {
-       var base_url = "/wp-content/themes/businesstarget/api/";
-       var unsubscribe_url = base_url + "unsubscribe.php";
-       var me_url = base_url + "me.php";
-       $http.post(me_url, {id: $routeParams.id}).success(function(data, status, headers, config) {
-         $scope.email = data.mail;
-       });
-       $scope.submit_unsubscribe = function(email) {
-           var nlid = businesstarget_setup.nlid + ':0';
-           $http.post(unsubscribe_url, {id: $routeParams.id, nlid: nlid, email: $scope.email}).success(function(data, status, headers, config) {
-             $scope.displayThanks = true;
-           });
-       };
-    }])
  .controller('SignupController', ['$scope', '$location', '$http', 'apiService', 'lodash', 'localStorageService', function($scope, $location, $http, apiService, lodash, localStorageService) {
     apiService.getInterests().then(function(interests) {
       $scope.interests = interests;
