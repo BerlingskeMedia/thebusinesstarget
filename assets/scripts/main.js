@@ -90,9 +90,6 @@
       .then(_httpUnwrapper);
     };
 
-
-
-
     var unsubscribe = function(ekstern_id) {
       return $http.post(BASE_URL + 'unsubscribe.php', {ekstern_id: ekstern_id})
       .then(_httpUnwrapper);
