@@ -28,6 +28,13 @@
        .when('/thanks', {
          templateUrl: 'thanks.html',
        })
+       .when('/confirm', {
+         templateUrl: 'confirm.html',
+       })
+       .when('/doubleoptkey/:key', {
+         templateUrl: 'confirm.html',
+         controller: 'DoubleoptKeyConfirmController'
+       })
        .when('/edit/:ekstern_id', {
          templateUrl: 'edit.html',
          controller: 'EditController'
@@ -47,7 +54,7 @@
   .factory('apiService', ['$http', function($http) {
     var BASE_URL = '/wp-content/themes/businesstarget/api/';
     var getInterests = function() {
-      return $http.get(BASE_URL + 'interests.php').then(_httpUnwrapper);
+      return $http.get(BASE_URL + 'interests.php', {cache: true}).then(_httpUnwrapper);
     };
     var doubleoptkey;
 
@@ -78,6 +85,11 @@
       .then(_httpUnwrapper);
     };
 
+    var confirmDoubleoptKey = function(key) {
+      return $http.post(BASE_URL + 'doubleoptkeyconfirm.php', {double_opt_key:key})
+      .then(_httpUnwrapper);
+    };
+
 
 
 
@@ -102,7 +114,8 @@
       addInterests: addInterests,
       get_doubleoptkey: get_doubleoptkey,
       unsubscribe: unsubscribe,
-      editUser: editUser
+      editUser: editUser,
+      confirmDoubleoptKey: confirmDoubleoptKey
     };
   }])
   .controller('LoginController', ['$scope', '$location', function($scope, $location) {
@@ -128,6 +141,16 @@
         });
 
       };
+  }])
+
+  .controller('DoubleoptKeyConfirmController', ['$scope', '$location', '$routeParams', '$q', 'apiService', 'lodash', function($scope, $location, $routeParams, $q, apiService, lodash) {
+    apiService.confirmDoubleoptKey($routeParams.key).then(function() {
+      $location.path('thanks');
+    })
+    .catch(function() {
+      $location.path('step1');
+    });
+
   }])
    .controller('EditController', ['$scope', '$location', '$routeParams', '$q', 'apiService', 'lodash', function($scope, $location, $routeParams, $q, apiService, lodash) {
      var _ = lodash;
@@ -261,11 +284,11 @@
 
 
         if ($scope.businessinterests.length === 0) {
-          return $location.path("thanks");
+          return $location.path("confirm");
         }
         apiService.addInterests($scope.businessinterests)
         .then(function(data) {
-          $location.path("thanks");
+          $location.path("confirm");
         });
      };
   }]);

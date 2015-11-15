@@ -123,6 +123,15 @@
     <?php the_field('thanks', 'option');?>
   </div>
 </script>
+
+<script type="text/ng-template" id="confirm.html">
+  <div class="view confirm">
+    <h2>Tak, din profil er nu udfyldt</h2>
+    <p>
+      Du modtager en mail hvor du skal bekræfte dine præferencer.
+    </p>
+  </div>
+</script>
 <script type="text/ng-template" id="edit.html">
 <form name="edit">
   <div class="row">
