@@ -39,31 +39,29 @@
       <input type="email" name="mail" ng-model="user.email" ng-required="true" placeholder="E-mail"/>
     </div>
     <div class="col-sm-6">
-    <input type="number" name="zip" ng-required="true" ng-model="user.postnummer_dk" min="999" max="9999" placeholder="Postnummer"/>
-    <select name="stilling" ng-required="true" ng-model="user.occupation">
-        <option disabled selected value="">Vælg stilling</option>
-        <option ng-repeat="i in interests | filter: {interesse_parent_id: 343}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
-    </select>
-    <select name="branche" ng-required="true" class="select2" ng-model="user.industry" value="Vælg branche">
-        <option disabled selected value="">Vælg branche</option>
-        <option ng-repeat="i in interests | filter: {interesse_parent_id: 310}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
-    </select>
-  </div>
-  <div class="col-sm-12 terms">
-    <input type="checkbox" ng-required="true" ng-model="accepted" name="terms" />
-    <div class="terms-text" ng-click="displayTerms = true">Jeg accepterer <span class="terms-emph">betingelserne</span>
+      <input type="number" name="zip" ng-required="true" ng-model="user.postnummer_dk" min="999" max="9999" placeholder="Postnummer"/>
+      <select name="stilling" ng-required="true" ng-model="user.occupation" ng-options="i.interesse_id as i.interesse_navn for i in interests | filter: {interesse_parent_id: 343}">
+          <option disabled selected value="">Vælg stilling</option>
+      </select>
+      <select name="branche" ng-required="true" ng-model="user.industry" value="Vælg branche" ng-options="i.interesse_id as i.interesse_navn for i in interests | filter: {interesse_parent_id: 310}">
+          <option disabled selected value="">Vælg branche</option>
+      </select>
     </div>
-    <div class="conditions" ng-class="{visible: displayTerms || accepted}"><?php the_field('terms', 'option');?></div>
+    <div class="col-sm-12 terms">
+      <input type="checkbox" ng-required="true" ng-model="accepted" name="terms" />
+      <div class="terms-text" ng-click="displayTerms = true">Jeg accepterer <span class="terms-emph">betingelserne</span>
+      </div>
+      <div class="conditions" ng-class="{visible: displayTerms || accepted}"><?php the_field('terms', 'option');?></div>
+    </div>
+    <div class="col-sm-12 terms" ng-if="<?php echo $show_bem_permission_value ?>">
+      <input type="checkbox" ng-model="user.bem_permission" name="terms" />
+      <div class="terms-text" ng-click="displayBemTerms = true"><?php the_field('bem_signup_teaser', 'option');?></div>
+      <div class="conditions" ng-class="{visible: displayBemTerms || user.bem_permission}"><?php the_field('bem_terms', 'option');?></div>
+    </div>
+    <div class="col-sm-12 signup-submit">
+      <input type="submit" value="Tilmeld" class="button col-md-4 col-md-offset-8" ng-click="submit_step1(user)"/>
+    </div>
   </div>
-  <div class="col-sm-12 terms" ng-if="<?php echo $show_bem_permission_value ?>">
-    <input type="checkbox" ng-model="user.bem_permission" name="terms" />
-    <div class="terms-text" ng-click="displayBemTerms = true"><?php the_field('bem_signup_teaser', 'option');?></div>
-    <div class="conditions" ng-class="{visible: displayBemTerms || user.bem_permission}"><?php the_field('bem_terms', 'option');?></div>
-  </div>
-  <div class="col-sm-12 signup-submit">
-    <input type="submit" value="Tilmeld" class="button col-md-4 col-md-offset-8" ng-click="submit_step1(user)"/>
-  </div>
-</div>
 </form>
 <div class="stage one"></div>
 </script>
@@ -136,48 +134,41 @@
 <form name="edit">
   <div class="row">
     <div class="col-sm-6">
-
-    <input type="text" name="navn" ng-model="user.fornavn" ng-required="true" placeholder="Fornavn"/>
-    <input type="text" name="navn" ng-model="user.efternavn" ng-required="true" placeholder="Efternavn"/>
-    <input type="email" name="mail" disabled ng-model="user.email" placeholder="E-mail"/>
+      <input type="text" name="navn" ng-model="user.fornavn" ng-required="true" placeholder="Fornavn"/>
+      <input type="text" name="navn" ng-model="user.efternavn" ng-required="true" placeholder="Efternavn"/>
+      <input type="email" name="mail" disabled ng-model="user.email" placeholder="E-mail"/>
     </div>
     <div class="col-sm-6">
-    <input type="number" name="zip" ng-required="true" ng-model="user.postnummer_dk" min="999" max="9999" placeholder="Postnummer"/>
-    <select name="stilling" ng-required="true" ng-model="user.occupation">
-        <option disabled value="">Vælg stilling</option>
-        <option ng-selected="user.occupation == i.interesse_id" ng-repeat="i in interests | filter: {interesse_parent_id: 343}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
-    </select>
+      <input type="number" name="zip" ng-required="true" ng-model="user.postnummer_dk" min="999" max="9999" placeholder="Postnummer"/>
 
-    <select name="branche" ng-required="true" class="select2" ng-model="user.industry" value="Vælg branche">
-        <option disabled value="">Vælg branche</option>
-        <option ng-selected="user.industry == i.interesse_id" ng-repeat="i in interests | filter: {interesse_parent_id: 310}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
-    </select>
+      <select name="stilling" ng-required="true" ng-model="user.occupation" ng-options="i.interesse_id as i.interesse_navn for i in interests | filter: {interesse_parent_id: 343}">
+          <option disabled value="">Vælg stilling</option>
+      </select>
+
+      <select name="branche" ng-required="true" ng-model="user.industry" ng-options="i.interesse_id as i.interesse_navn for i in interests | filter: {interesse_parent_id: 310}">
+          <option disabled value="">Vælg branche</option>
+      </select>
     </div>
   </div>
   <div class="divider"></div>
   <div class="row">
     <div class="col-sm-6">
-      <select name="employees" ng-required="true" ng-model="user.employees">
+      <select name="employees" ng-required="true" ng-model="user.employees" ng-options="i.interesse_id as i.interesse_navn for i in interests | filter: {interesse_parent_id: 335}">
           <option disabled value="">Antal ansatte</option>
-          <option <option ng-selected="user.employees == i.interesse_id" ng-repeat="i in interests | filter: {interesse_parent_id: 335} | orderBy: 'interesse_id'" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
       </select>
-      <select name="managementlevel" ng-required="true" ng-model="user.managementlevel">
+      <select name="managementlevel" ng-required="true" ng-model="user.managementlevel" ng-options="i.interesse_id as i.interesse_navn for i in interests | filter: {interesse_parent_id: 391}">
           <option disabled value="">Ledelsesniveau</option>
-          <option ng-selected="user.managementlevel == i.interesse_id" ng-repeat="i in interests | filter: {interesse_parent_id: 391} | orderBy: 'interesse_id'" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
       </select>
-      <select name="buyer" ng-required="true" ng-model="user.buyer">
+      <select name="buyer" ng-required="true" ng-model="user.buyer" ng-options="i.interesse_id as i.interesse_navn for i in interests | filter: {interesse_parent_id: 400}">
           <option disabled value="">Involveret i køb</option>
-          <option ng-selected="user.buyer == i.interesse_id" ng-repeat="i in interests | filter: {interesse_parent_id: 400}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
       </select>
     </div>
     <div class="col-sm-6">
-      <select name="car" ng-required="true" ng-model="user.car">
+      <select name="car" ng-required="true" ng-model="user.car" ng-options="i.interesse_id as i.interesse_navn for i in interests | filter: {interesse_parent_id: 397}">
           <option disabled value="">Firmabil</option>
-          <option ng-selected="user.car == i.interesse_id" ng-repeat="i in interests | filter: {interesse_parent_id: 397}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
       </select>
-      <select name="traveller" ng-required="true" ng-model="user.traveller">
+      <select name="traveller" ng-required="true" ng-model="user.traveller" ng-options="i.interesse_id as i.interesse_navn for i in interests | filter: {interesse_parent_id: 403}">
           <option disabled value="">Forretningsrejsende</option>
-          <option ng-selected="user.traveller == i.interesse_id" ng-repeat="i in interests | filter: {interesse_parent_id: 403}" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
       </select>
     </div>
   </div>

@@ -31,7 +31,7 @@
        .when('/confirm', {
          templateUrl: 'confirm.html',
        })
-       .when('/doubleoptkey/:key', {
+       .when('/confirm/:key', {
          templateUrl: 'confirm.html',
          controller: 'DoubleoptKeyConfirmController'
        })
@@ -55,6 +55,9 @@
     var BASE_URL = '/wp-content/themes/businesstarget/api/';
     var getInterests = function() {
       return $http.get(BASE_URL + 'interests.php', {cache: true}).then(_httpUnwrapper);
+    };
+    var getSubInterests = function() {
+      return $http.get(BASE_URL + 'sub_interests.php', {cache: true}).then(_httpUnwrapper);
     };
     var doubleoptkey;
 
@@ -80,8 +83,8 @@
       .then(_httpUnwrapper);
     };
 
-    var login = function(email) {
-      return $http.post(BASE_URL + 'send_login.php', {mail:mail})
+    var login = function(mail) {
+      return $http.post(BASE_URL + 'send_login.php', {mail: mail})
       .then(_httpUnwrapper);
     };
 
@@ -106,8 +109,10 @@
 
     return {
       getInterests: getInterests,
+      getSubInterests: getSubInterests,
       getUser: getUser,
       signup: signup,
+      login: login,
       addInterests: addInterests,
       get_doubleoptkey: get_doubleoptkey,
       unsubscribe: unsubscribe,
@@ -115,8 +120,9 @@
       confirmDoubleoptKey: confirmDoubleoptKey
     };
   }])
-  .controller('LoginController', ['$scope', '$location', function($scope, $location) {
+  .controller('LoginController', ['$scope', '$location', 'apiService', function($scope, $location, apiService) {
       $scope.submit_email = function(mail) {
+        console.log('submit_email', $scope.loginform.$valid, mail);
           if (!$scope.loginform.$valid) {
             return;
            }
@@ -163,6 +169,7 @@
      };
 
      function remove_TBT(tbt, my_interests) {
+
        var valid_choices = _.map(tbt, _.property('interesse_id'));
        var tbt_intersection = _.intersection(valid_choices, my_interests);
        var without_tbt = [];
@@ -176,22 +183,21 @@
      }
 
      $q.all([my_user_promise, interests_promise]).then(function(result) {
-        $scope.user = result[0];
 
-        $scope.interests = result[1];
-        var user = $scope.user;
+      $scope.user = result[0];
+      $scope.interests = result[1];
+      var user = $scope.user;
 
-       $scope.user.occupation = _.first(find_choice(user.interesser, $scope.interests, "343"));
-       $scope.user.industry = _.first(find_choice(user.interesser, $scope.interests, "310"));
-       $scope.user.employees = _.first(find_choice(user.interesser, $scope.interests, "335"));
-       $scope.user.managementlevel = _.first(find_choice(user.interesser, $scope.interests, "391"));
-       $scope.user.buyer = _.first(find_choice(user.interesser, $scope.interests, "400"));
-       $scope.user.traveller = _.first(find_choice(user.interesser, $scope.interests, "403"));
-       $scope.user.car = _.first(find_choice(user.interesser, $scope.interests, "397"));
-       $scope.user.businessinterests = find_choice(user.interesser, $scope.interests, "407");
+      $scope.user.occupation = _.first(find_choice(user.interesser, $scope.interests, "343"));
+      $scope.user.industry = _.first(find_choice(user.interesser, $scope.interests, "310"));
+      $scope.user.employees = _.first(find_choice(user.interesser, $scope.interests, "335"));
+      $scope.user.managementlevel = _.first(find_choice(user.interesser, $scope.interests, "391"));
+      $scope.user.buyer = _.first(find_choice(user.interesser, $scope.interests, "400"));
+      $scope.user.traveller = _.first(find_choice(user.interesser, $scope.interests, "403"));
+      $scope.user.car = _.first(find_choice(user.interesser, $scope.interests, "397"));
+      $scope.user.businessinterests = find_choice(user.interesser, $scope.interests, "407");
 
       $scope.user.interesser = remove_TBT($scope.interests, $scope.user.interesser);
-
      });
 
      $scope.submit_edit = function(user) {
