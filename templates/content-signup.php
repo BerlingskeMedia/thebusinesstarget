@@ -72,11 +72,11 @@
       <div class="col-sm-6">
         <select name="employees" ng-required="true" ng-model="user.employees">
             <option disabled selected value="">Antal ansatte</option>
-            <option ng-repeat="i in interests | filter: {interesse_parent_id: 335} | orderBy: 'interesse_id'" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
+            <option ng-repeat="i in interests | filter: {interesse_parent_id: 335} | orderBy: 'sort'" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
         </select>
         <select name="managementlevel" ng-required="true" ng-model="user.managementlevel">
             <option disabled selected value="">Ledelsesniveau</option>
-            <option ng-repeat="i in interests | filter: {interesse_parent_id: 391} | orderBy: 'interesse_id'" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
+            <option ng-repeat="i in interests | filter: {interesse_parent_id: 391} | orderBy: 'sort'" value="{{i.interesse_id}}">{{i.interesse_navn}}</option>
         </select>
         <select name="buyer" ng-required="true" ng-model="user.buyer">
             <option disabled selected value="">Involveret i køb</option>
